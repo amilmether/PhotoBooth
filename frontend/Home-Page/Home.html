@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Photobooth</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .background {
+            background-image: url('https://images.unsplash.com/photo-1517586979032-236e16417249'); /* Polaroid background */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .content {
+            position: relative;
+            text-align: center;
+            color: #fff;
+            z-index: 1;
+        }
+
+        .content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .start-btn {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            color: #fff;
+            background-color: #ff4081;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            animation: fadeInUp 1s ease;
+        }
+
+        .start-btn:hover {
+            background-color: #e73370;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="overlay"></div>
+        <div class="content">
+            <h1>Welcome to the College Photobooth!</h1>
+            <button class="start-btn" onclick="startPhotobooth()">Click Here to Start</button>
+        </div>
+    </div>
+
+    <script>
+        function startPhotobooth() {
+            window.location.href = 'rates.html'; // Redirect to rates page
+        }
+    </script>
+</body>
+</html>
