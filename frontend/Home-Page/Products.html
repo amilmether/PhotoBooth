@@ -84,11 +84,20 @@
     <div class="products-container">
         {% for product in products %}
         <div class="product-card">
-            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            {% if product.photo_count == 2 %}
+                <img src="https://i.pinimg.com/736x/69/5e/06/695e061f3ca846db2e241eb1192428ca.jpg" alt="Polaroid Pack">
+            {% elif product.photo_count == 3 %}
+                <img src="https://i.pinimg.com/736x/39/d0/8c/39d08c210581f2bf1afd4b5a72e248f5.jpg" alt="Digital Pack">
+            {% elif product.photo_count == 5 %}
+                <img src="https://i.pinimg.com/736x/5e/79/8d/5e798d524ff901c1196e423b330619be.jpg" alt="Premium Print">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1580910051070-d14024a87b3e" alt="Default Image">
+            {% endif %}
+
             <h2 class="product-title">{{ product.name }}</h2>
-            <p class="product-description">{{ product.description }}</p>
-            <p class="product-price">${{ product.price }}</p>
-            <form action="{% url 'create_order' %}" method="POST">
+            <p class="product-description">{{ product.photo_count }} Photos</p>
+            <p class="product-price">₹{{ product.price }}</p>
+            <form action="" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <button type="submit" class="btn">Buy Now</button>
@@ -96,7 +105,6 @@
         </div>
         {% endfor %}
     </div>
-    
 
 </body>
 </html>

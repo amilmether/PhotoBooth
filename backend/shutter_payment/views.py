@@ -1,4 +1,3 @@
-import razorpay
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -8,8 +7,8 @@ import json
 from .models import Order,PhotoPackage
 
 
-def Home(request):
-    return render(request,"Home-Page/Home")
+def home(request):
+    return render(request,"Home-Page/Home.html")
 
 def products(request):
     products= PhotoPackage.objects.all()
