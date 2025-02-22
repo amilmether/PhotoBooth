@@ -97,7 +97,7 @@
             <h2 class="product-title">{{ product.name }}</h2>
             <p class="product-description">{{ product.photo_count }} Photos</p>
             <p class="product-price">₹{{ product.price }}</p>
-            <form action="" method="POST">
+            <form action="{% url 'create_order' %}" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <button type="submit" class="btn">Buy Now</button>
@@ -105,6 +105,5 @@
         </div>
         {% endfor %}
     </div>
-
 </body>
 </html>
