@@ -43,13 +43,19 @@ class Order(models.Model):
 
 
 class OrderPackage(models.Model):
+    from django.db import models
+import uuid
+
+class OrderPackage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_packages')
     package = models.ForeignKey(PhotoPackage, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    number_of_photos = models.PositiveIntegerField(default=1)  # Renamed from quantity
+    number_of_copies = models.PositiveIntegerField(default=1)  # New field for copies
 
     def __str__(self):
-        return f"{self.order.razorpay_order_id} - {self.package.name} x{self.quantity}"
+        return f"{self.order.razorpay_order_id} - {self.package.name} x{self.number_of_photos} (Copies: {self.number_of_copies})"
+
 
 
 class Photo(models.Model):

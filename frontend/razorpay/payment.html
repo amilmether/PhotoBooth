@@ -18,24 +18,27 @@
         "description": "{{ product_name }}",
         "handler": function (response) {
             const orderId = "{{ order_id }}";
-            const checkPaymentStatus = () => {
-                fetch(`/payment_status/${orderId}/`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.href = '/photo/'; 
-                    } else if (data.status === 'failed') {
-                        window.location.href = '/error/';
-                    } else {
-                        setTimeout(checkPaymentStatus, 3000);
-                    }
-                });
-            };
-            checkPaymentStatus();
-        },
+            const orderUUID = "{{ uuid }}";  // ✅ Use correct UUID
+    console.log("Redirecting to:", `/photobooth_view/${orderId}/`);  // ✅ Debugging
+
+    const checkPaymentStatus = () => {
+        fetch(`/payment_status/${orderId}/`, {  // ✅ Use UUID
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = `/photobooth_view/${orderUUID}/`;  // ✅ Redirect using UUID
+            } else if (data.status === 'failed') {
+                window.location.href = '/error/';
+            } else {
+                setTimeout(checkPaymentStatus, 3000);
+            }
+        });
+    };
+    checkPaymentStatus();
+},
         "modal": {
             "ondismiss": function () {
                 console.log("Payment modal closed by user.");

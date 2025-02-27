@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ng)5%z1jju056y$ip%-bs2y4tm6l#9d2j_d#ocy0ovv33*r--n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','b032-116-68-102-219.ngrok-free.app','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','be79-2409-40f3-109e-a115-49b-9508-8b6e-ce9c.ngrok-free.app','127.0.0.1']
 
 
 # Application definition
@@ -113,8 +113,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+# RAZORPAY_KEY_ID = "rzp_live_NLnrtZ4ZPpY011"
+# RAZORPAY_KEY_SECRET = "Afbulb0hXol3wyttkAXMxQEW"
+
 RAZORPAY_KEY_ID = "rzp_test_SYoNNAtaCNTHyk"
 RAZORPAY_KEY_SECRET = "HOaI70Z9radLE67lGumQsLDN"
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -129,5 +133,5 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS=[
-    'https://b032-116-68-102-219.ngrok-free.app',
+    'https://be79-2409-40f3-109e-a115-49b-9508-8b6e-ce9c.ngrok-free.app',
 ]

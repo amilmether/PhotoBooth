@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -15,33 +15,47 @@ def products(request):
     products= PhotoPackage.objects.all()
     return render(request,"Home-Page/products.html",{'products':products})
 
+def error(request):
+    return render(request,"razorpay/error.html")
 
 def create_order(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
+        number_of_copies = int(request.POST.get('number_of_copies', 1))  # Get copies, default is 1
+        
+        # Ensure number_of_copies is within limits (1-3)
+        if number_of_copies < 1:
+            number_of_copies = 1
+        elif number_of_copies > 3:
+            number_of_copies = 3
+
         product = PhotoPackage.objects.get(id=product_id)
-       
-       
+
+        # Adjust price based on number_of_copies
+        price_multiplier = number_of_copies  # 1x, 2x, or 3x
+        total_price = product.price * price_multiplier
+
         order_data = {
-            # 'amount': int(product.price * 100), 
-            'amount': int(1 * 100),
+            'amount': int(total_price * 100),  # Convert to paise
             'currency': 'INR',
             'payment_capture': '1'
         }
         order = client.order.create(data=order_data)
-        Order.objects.create(
-            # user=request.user,
-            # product=product,
+
+        # ✅ Create Order in DB and store UUID
+        new_order = Order.objects.create(
             razorpay_order_id=order["id"],
-            total_amount=product.price
+            total_amount=total_price,
+            number_of_copies=number_of_copies  # Store the selected copies
         )
+
         return render(request, 'razorpay/payment.html', {
-            'order_id': order['id'],
+            'uuid': new_order.id,  
+            'order_id': order['id'],  
             'razorpay_key_id': settings.RAZORPAY_KEY_ID,
             'product_name': product.name,
-            'price': product.price / 100  
+            'price': total_price  # Show correct total price
         })
-    return redirect('photo/')  
 
 
 @csrf_exempt
@@ -86,10 +100,47 @@ def payment_status(request, order_id):
     try:
         order = Order.objects.get(razorpay_order_id=order_id)
         if order.payment_status:
+            print("hey")
             return JsonResponse({'status': 'success'})
-        
+
         else:
             return JsonResponse({'status': 'failed'})
     except Order.DoesNotExist:
         return JsonResponse({'status': 'failed', 'message': 'Order not found'})
     
+from .models import Order, Photo
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
+def capture_photo(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        image_file = request.FILES.get('image')
+        
+        try:
+            order = Order.objects.get(id=order_id)
+            if order.photos.count() >= 4:
+                return JsonResponse({'status': 'error', 'message': 'Photo limit reached'})
+
+            Photo.objects.create(
+                order=order,
+                image_url=image_file
+            )
+            return JsonResponse({'status': 'success', 'photo_count': order.photos.count()})
+            
+        except Order.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Invalid order'})
+    # Handle unsupported HTTP methods
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+def photobooth_view(request, order_id):
+    print(f"Received order_id: {order_id}")  # ✅ Debugging
+
+    order = get_object_or_404(Order, id=order_id)  # Ensure this exists!
+    return render(request, 'photo/photobooth.html', {'order': order})
+
+# def photobooth_view(request):
+#     # order = get_object_or_404(Order, id=order_id)
+#     return render(request, 'photo/photobooth.html')    

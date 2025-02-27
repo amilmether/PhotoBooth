@@ -8,5 +8,8 @@ urlpatterns = [
     path('razorpay_webhook/',views.razorpay_webhook,name='razorpay_webhook'),
     path('payment_status/<str:order_id>/',views.payment_status,name='payment_status'),
     path('photo/',views.photo,name='home_photo'),
+    path('error/',views.error,name='error_page'),
+    path('capture-photo/', views.capture_photo, name='capture_photo'),
+    path('photobooth_view/<uuid:order_id>/', views.photobooth_view, name='photobooth_view'),
     
 ]
